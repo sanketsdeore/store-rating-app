@@ -58,7 +58,7 @@ export class StoresService {
                 name: store.name,
                 address: store.address,
                 overallRating,
-                userRating: userRating
+                userRating: userRating?.rating || 0
             }
         })
     }

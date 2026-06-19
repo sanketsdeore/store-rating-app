@@ -60,18 +60,47 @@ export class AdminService {
     }
 
     async getAllUsers() {
-        return this.prisma.user.findMany({
+        const users = await this.prisma.user.findMany({
             select: {
                 id: true,
                 name: true,
                 email: true,
                 address: true,
                 role: true,
-                createdAt: true
+                createdAt: true,
+                store: {
+                    select: {
+                        ratings: {
+                            select: {
+                                rating: true
+                            }
+                        }
+                    }
+                }
             },
             orderBy: {
                 createdAt: 'desc'
             }
+        });
+
+        return users.map((user) => {
+            let averageRating: number | null = null;
+            if (user.role === Role.STORE_OWNER && user.store) {
+                const ratings = user.store.ratings;
+                averageRating =
+                    ratings.length > 0
+                    ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length
+                    : 0;
+            }
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                address: user.address,
+                role: user.role,
+                createdAt: user.createdAt,
+                averageRating
+            };
         });
     }
 
@@ -126,7 +155,7 @@ export class AdminService {
                 email: dto.email,
                 address: dto.address,
                 password: hashedPassword,
-                role: Role.USER
+                role: dto.role || Role.USER
             }
         });
 
