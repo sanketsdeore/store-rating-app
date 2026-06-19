@@ -52,7 +52,7 @@ function Navbar() {
                   className="text-stone-700 font-medium hover:text-stone-950 focus:outline-none flex items-center gap-1 cursor-pointer select-none"
                 >
                   <span>{user.email}</span>
-                  <span className="text-[8px] text-stone-400 relative top-[1px]">▼</span>
+                  <span className="text-[8px] text-stone-400 relative top-px">▼</span>
                 </button>
                 {showDropdown && (
                   <div className="absolute right-0 mt-2 w-44 bg-white border border-stone-200 rounded shadow z-50 py-1">
